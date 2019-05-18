@@ -114,7 +114,6 @@
     $window.on('load', function() {
       $window.trigger('scroll');
     });
-
   });
 
 
@@ -126,5 +125,8 @@
 	    }
 	});
 
+  $('.hide').click(function(){
+    $('.expired').toggle();
+  });
 
 })(jQuery);

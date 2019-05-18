@@ -4,85 +4,68 @@ var router = express.Router();
 var mysql = require('mysql');
 var url = require('url')
 var d = require('../public/javascripts/createdatevalue')
+var template = require('../public/javascripts/template')
 
+var db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'dlguswo@9prxel',
+  database: 'test',
+  dateStrings: 'date'
+});
+/*
 var db = mysql.createConnection({
   host: 'us-cdbr-iron-east-02.cleardb.net',
   user: 'bfa4c9d81c03be',
   password: 'ddb07be5',
   database: 'heroku_52c20a3cfded650',
   dateStrings: 'date'
-});
+});*/
 db.connect();
-
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   var queryData = url.parse(req.url, true).query;
   var title = 'MY TO DO LIST';
-  var box = `<div class="thumbnails">`;
-  var queryString = 'SELECT * FROM list';
 
-  if(queryData.order === 'complete'){
-    queryString = 'SELECT * FROM list where complete=1';
-  }
 
-  if(queryData.order === 'deadline'){
-    queryString = 'SELECT * FROM list where deadline is not null order by TO_DAYS(deadline)-TO_DAYS(curDate())';
-  }
+  db.query('select * from list where TO_DAYS(deadline)-TO_DAYS(curDate()) < 0', function(error, deadres){
+    var warn = `
+      <div class="createbox"><p>마감된 리스트
+      <input type="button" class="hide"></input></p>
+      </div>
+      <div class="expired">
+      `;
+    warn = warn + template.BOX(deadres) + `</div>`;
 
-  if(queryData.order === 'priority'){
-    queryString = 'SELECT * FROM list order by priority';
-  }
-
-  db.query(queryString, function(error, results) {
-    if (error) {
-      console.log(error);
-    }
-
-    var inner = `
+    var body = warn;
+    body = body + `
     <div class ="createbox">
-      <a href="/create">추가하기</a>
+      <a href="/create" class="createbutton">새 목록</a>
+      <a disabled> - </a>
       <a href="/">최신순</a>
-      <a href="/?order=complete">완료</a>
+      <a href="/?order=complete">완료된 목록</a>
       <a href="/?order=deadline">마감임박순</a>
       <a href="/?order=priority">우선순위</a>
     </div>
     `;
 
-    for (var i = 0; i < results.length; i++) {
-      var tmp = results[i].deadline;
-      if(tmp === null){
-        tmp = '마감기한없음';
-      }
+    var queryString = 'SELECT * FROM list';
 
-      box = box +
-      `
-      <div class="box">
-        <div class="inner">
-          <h4>${results[i].priority}순위</h4>
-      `;
+    if(queryData.order === 'complete'){ queryString = 'SELECT * FROM list where complete=1'; }
+    if(queryData.order === 'deadline'){ queryString = 'SELECT * FROM list where deadline is not null order by TO_DAYS(deadline)-TO_DAYS(curDate())';}
+    if(queryData.order === 'priority'){ queryString = 'SELECT * FROM list order by priority';}
 
-      if(results[i].complete === 1){
-        box = box + `<h3>V${results[i].title}</h3>`;
+    db.query(queryString, function(error, results) {
+      if (error) {
+        console.log(error);
       }
-      else{
-        box = box + `<h3>${results[i].title}</h3>`;
-      }
-
-      box = box + `
-          <p>${results[i].description}</p>
-          <p>${tmp}</p>
-          <a href="/complete?id=${results[i].id}" class="t">complete</a>
-          <a href="/update?id=${results[i].id}" class="t">update</a>
-          <a href="/delete?id=${results[i].id}" class="t">delete</a>
-        </div>
-      </div>
-      `;
-    }
-    box = box + `</div>`;
-    inner = inner + box;
-    res.render('index', { title: 'Express' , body: inner});
+      var box = template.BOX(results);
+      body = body + box;
+      res.render('index', { title: 'Express' , body: body});
+    });
   });
+
 });
 
 router.get('/create', function(req, res) {
@@ -93,10 +76,10 @@ router.get('/create', function(req, res) {
   `
   <form action='/createList' method ="post">
     <div>
-      <input type="text" placeholder="title" name="listTitle"/>
+      <input type="text" placeholder="title" name="listTitle" required/>
     </div>
     <div>
-      <textarea cols="10" placeholder="to do list" name="description"></textarea>
+      <textarea cols="18" rows="10" placeholder="to do list" name="description"></textarea>
     </div>
     <div>
       <input type="checkbox" id="checkbox">마감기한 추가하기
@@ -149,7 +132,7 @@ router.get('/update', function(req, res) {
     `
     <form action='/updateList' method ="post">
       <div>
-        <input type="text" placeholder="title" name="listTitle" value="${results[0].title}"/>
+        <input type="text" placeholder="title" name="listTitle" value="${results[0].title}" required/>
       </div>
       <div>
         <textarea cols="10" placeholder="to do list" name="description">${results[0].description}</textarea>
@@ -175,7 +158,7 @@ router.get('/update', function(req, res) {
 
     box = box + `
     <select name="priority">
-      <option disabled selected>${results[0].priority}</option>
+      <option selected>${results[0].priority}</option>
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -206,6 +189,7 @@ router.post('/updateList', function(req, res) {
 
 router.get('/delete', function(req, res) {
   var queryData = url.parse(req.url, true).query;
+  console.log(queryData.id);
   db.query(`DELETE FROM list WHERE id=?`, [queryData.id], function(error, results) {
     if (error) throw error;
     res.redirect("/");
