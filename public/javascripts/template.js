@@ -4,8 +4,13 @@ module.exports = {
 
     for (var i = 0; i < results.length; i++) {
       var tmp = results[i].deadline;
-
+      var imgUrl ='';
       if(tmp === null){ tmp = '없음';  }
+      if(results[i].complete === 1){
+        imgUrl ='/images/complete.png';
+      }else{
+        imgUrl ='/images/no_complete.png';
+      }
 
       box = box +
       `
@@ -22,9 +27,9 @@ module.exports = {
             <p>마감기한 : ${tmp}</p>
           </div>
           <div class="inner_button">
-            <a href="/complete?id=${results[i].id}" class="t">complete</a>
-            <a href="/update?id=${results[i].id}" class="t">update</a>
-            <a href="/delete?id=${results[i].id}" class="t">delete</a>
+            <a href="/complete?id=${results[i].id}" class="com" style="background: url(${imgUrl})no-repeat; 	background-position-x:1em;"/>complete</a>
+            <a href="/update?id=${results[i].id}" class="up">update</a>
+            <a href="/delete?id=${results[i].id}" class="del">delete</a>
           </div>
         </div>
       </div>

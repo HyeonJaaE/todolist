@@ -6,21 +6,22 @@ var url = require('url')
 var d = require('../public/javascripts/createdatevalue')
 var template = require('../public/javascripts/template')
 
+/*
 var db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'dlguswo@9prxel',
   database: 'test',
   dateStrings: 'date'
-});
-/*
+});*/
+
 var db = mysql.createConnection({
   host: 'us-cdbr-iron-east-02.cleardb.net',
   user: 'bfa4c9d81c03be',
   password: 'ddb07be5',
   database: 'heroku_52c20a3cfded650',
   dateStrings: 'date'
-});*/
+});
 db.connect();
 
 /* GET home page. */
