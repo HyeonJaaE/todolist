@@ -142,7 +142,8 @@ router.get('/update', function(req, res) {
         <input type="text" placeholder="title" name="listTitle" value="${results[0].title}" required/>
       </div>
       <div>
-        <textarea cols="10" placeholder="to do list" name="description">${results[0].description}</textarea>
+        <textarea cols="18" rows="10" placeholder="to do list" name="description" id="text_des">${results[0].description}</textarea>
+        <p class="data_count"><em id="messagebyte">0</em>/1000 byte</p>
       </div>
       <div>
         <input type="hidden" name="id" value="${results[0].id}">
