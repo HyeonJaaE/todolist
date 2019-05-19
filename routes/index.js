@@ -9,9 +9,9 @@ var template = require('../public/javascripts/template')
 /*
 var db = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: 'dlguswo@9prxel',
-  database: 'test',
+  user: '',
+  password: '',
+  database: '',
   dateStrings: 'date'
 });
 */
