@@ -13,8 +13,8 @@ var db = mysql.createConnection({
   password: 'dlguswo@9prxel',
   database: 'test',
   dateStrings: 'date'
-});*/
-
+});
+*/
 var db = mysql.createConnection({
   host: 'us-cdbr-iron-east-02.cleardb.net',
   user: 'bfa4c9d81c03be',
@@ -77,14 +77,18 @@ router.get('/create', function(req, res) {
   `
   <form action='/createList' method ="post">
     <div>
-      <input type="text" placeholder="title" name="listTitle" required/>
+      <input type="text" placeholder="title" name="listTitle" maxlength="20" required/>
     </div>
     <div>
-      <textarea cols="18" rows="10" placeholder="to do list" name="description"></textarea>
+      <textarea cols="18" rows="10" placeholder="to do list" name="description" id="text_des"></textarea>
+      <p class="data_count"><em id="messagebyte">0</em>/1000 byte</p>
     </div>
     <div>
       <input type="checkbox" id="checkbox">마감기한 추가하기
       <input type="date" name="date" min="${today}" class="date1" disabled/>
+    </div>
+    <div>
+      우선순위
       <select name="priority">
         <option value="1">1</option>
         <option value="2">2</option>
@@ -93,7 +97,9 @@ router.get('/create', function(req, res) {
         <option value="5" selected>5</option>
       </select>
     </div>
-    <div><input type="submit" value="Submit"></div>
+    <div style="width:50%; margin:auto;">
+      <input type="submit" value="Submit" style="width:100%;">
+    </div>
   </form>
   `;
   res.render('index', { title: 'Express' , body: inner});
@@ -158,16 +164,21 @@ router.get('/update', function(req, res) {
     }
 
     box = box + `
-    <select name="priority">
-      <option selected>${results[0].priority}</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
     </div>
-    <div><input type="submit" value="Submit"></div>
+    <div>
+      우선순위
+      <select name="priority">
+        <option selected>${results[0].priority}</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+    <div style="width:50%; margin:auto;">
+      <input type="submit" value="Submit" style="width:100%;">
+    </div>
     </form>
     `;
 

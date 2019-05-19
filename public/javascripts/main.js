@@ -129,4 +129,26 @@
     $('.expired').toggle();
   });
 
+  var limitByte = 1000;
+  $("#text_des").keyup(function() {
+
+        var totalByte = 0;
+        var message = $("#text_des").val();
+
+        for(var i =0; i < message.length; i++) {
+                var currentByte = message.charCodeAt(i);
+                if(currentByte > 128) totalByte += 2;
+                else totalByte++;
+        }
+
+        $('#messagebyte').text(totalByte);
+        if(totalByte > limitByte) {
+          alert( limitByte+"바이트까지 전송가능합니다.");
+          $("#text_des").val(message.substring(0,limitByte));
+        }
+    });
+
+
+
+
 })(jQuery);
