@@ -63,7 +63,7 @@ router.get('/', function(req, res, next) {
       }
       var box = template.BOX(results);
       body = body + box;
-      res.render('index', { title: 'Express' , body: body});
+      res.render('index', { title: title , body: body});
     });
   });
 
@@ -102,7 +102,7 @@ router.get('/create', function(req, res) {
     </div>
   </form>
   `;
-  res.render('index', { title: 'Express' , body: inner});
+  res.render('index', { title: title , body: inner});
 });
 
 router.post('/createList', function(req, res) {
@@ -183,7 +183,7 @@ router.get('/update', function(req, res) {
     </form>
     `;
 
-    res.render('index', { title: 'Express' , body: box});
+    res.render('index', { title: title , body: box});
   });
 });
 
