@@ -15,7 +15,7 @@ npm start
 
 if you want use your own datebase in localhost create table 
 ```
-CREATE TABLE `test`.`list1` (
+CREATE TABLE `test`.`list` (
   `id` INT NOT NULL,
   `title` VARCHAR(100) NULL DEFAULT NULL,
   `description` TEXT NULL DEFAULT NULL,
